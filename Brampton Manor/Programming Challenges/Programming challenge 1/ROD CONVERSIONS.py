@@ -1,6 +1,3 @@
-distance = float(input("Enter the distance in rods. "))
-print("Your input {} rods".format(distance))
-
 def Metres(distance):
     metres = distance * 5.0292
     return metres
@@ -25,6 +22,8 @@ def Time(distance):
 
 
 def run():
+    distance = float(input("Enter the distance in rods. "))
+    print("Your input {} rods".format(distance))
     print("\n" + "Conversions")
     print("Metres: {}".format(Time(distance)))
     print("Feet: {}".format(Feet(distance)))

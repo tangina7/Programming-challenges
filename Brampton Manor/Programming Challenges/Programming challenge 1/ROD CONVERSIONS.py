@@ -1,32 +1,37 @@
-
 distance = float(input("Enter the distance in rods. "))
-print(distance, "rods")
+print("Your input {} rods".format(distance))
 
 def Metres(distance):
     metres = distance * 5.0292
-    print(metres, "metres")
+    return metres
 
 def Furlongs(distance):
     furlongs = distance / 40
-    print(furlongs, "furlongs")
+    return furlongs
 
 def Miles(distance):
     miles = (distance * 5.0292) / 1609.34
-    print(miles, "miles")
     return miles
 
 def Feet(distance):
     feet = (distance * 5.0292) / 0.3048
-    print(feet, "feet")
+    return feet
 
 def Time(distance):
     miles = (distance * 5.0292) / 1609.34
     average = miles / 3.1
     time = average * 60
-    print("The time taken to walk that distance in minutes is", time)
+    return time
 
-Time(distance)
-Feet(distance)
-Miles(distance)
-Furlongs(distance)
-Metres(distance)
+
+def run():
+    print("\n" + "Conversions")
+    print("Metres: {}".format(Time(distance)))
+    print("Feet: {}".format(Feet(distance)))
+    print("Miles: {}".format(Miles(distance)))
+    print("Furlongs: {}".format(Furlongs(distance)))
+    print("Minutes to walk {} rods: {}".format(distance,Time(distance)))
+
+
+if __name__ == "__main__":
+    run()

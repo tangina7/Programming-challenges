@@ -18,13 +18,15 @@ def read_csv(csv_file):
 
 def process_results(rows):
     dictionary = {}
+    stats = {}
     for row in rows:
         home,away,homegoals,awaygoals,winner = row[1],row[2],row[3],row[4],row[5]
-        if home not in dictionary:
+        if home not in dictionary or home not in stats:
             dictionary[home] = [0,0,0,0,0] ##win, draw, lost, goal difference, points
-            
-        if away not in dictionary:
+            stats[home] = [0,0,0,0,0,0]
+        if away not in dictionary or away not in stats:
             dictionary[away] = [0,0,0,0,0]
+            stats[away] = [0,0,0,0,0,0]
 
         ## check if it is draw
         if winner == "D":
@@ -33,7 +35,6 @@ def process_results(rows):
 
             dictionary[home][1] += 1
             dictionary[away][1] += 1
-
 
         ## winner is home
         if winner == "H":
@@ -49,18 +50,61 @@ def process_results(rows):
             dictionary[home][2] += 1
             dictionary[away][0] += 1
 
-
         ## goal difference for home and awat
         dictionary[home][3] += int(homegoals) - int(awaygoals)
         dictionary[away][3] += int(awaygoals) - int(homegoals)
 
-    return dictionary
+        ## Most accurate team
+        hshots, ashots,  hshotstarget, ashotstarget = row[7], row[8], row[9], row[10]
+        stats[home][0] += int(hshots)
+        stats[away][0] += int(ashots)
+        stats[home][1] += int(hshotstarget)
+        stats[away][1] += int(ashotstarget)
+
+        ## Diriest Team
+        stats[home][2] += int(row[11])
+        stats[away][2] += int(row[12])
+
+        ## Card Average
+        homeYellow, awayYellow, homeRed, awayRed = row[15], row[16], row[17], row[18]
+        homeCards = int(homeYellow) + (int(homeRed) * 2)
+        awayCards = int(awayYellow) + (int(awayRed) * 2)
+        stats[home][3] += homeCards
+        stats[away][3] += awayCards
+
     
 
 
-            
+    sort = {k:v for k, v in sorted(dictionary.items(), key=lambda e: e[1][4], reverse=True)}
+    keysList = list(sort.keys())
+    print("Club {:<14} Won {:<11} Drawn {:<9} Lost {:<10} GD {:<12} Points".format(" ", " "," "," "," "))
+    print("\n")
+    for x in range(0,20):
+        key = keysList[x]
+        team = "{:<20}".format(key)
+
+        key = keysList[x]
+        accuracy = stats[key][1] / stats[key][0]
+        stats[key][4] = accuracy
+    
+        for y in range (0,5):
+            team += "{:<16}".format(sort[key][y])
+        print(team)
+
+    sortCards = sorted(stats.items(), key=lambda e: e[1][3])
+    sortFouls = sorted(stats.items(), key=lambda e: e[1][2])
+    sortAccuracy = sorted(stats.items(), key=lambda e: e[1][4])
+
+    print("\n")
+    print("The most acccurate team is {}".format(sortAccuracy[19][0]))
+    print("The least accurate team is {}".format(sortAccuracy[0][0]))
+    print("The dirtest team is {}".format(sortFouls[19][0]))
+    print("The cleanest team is {}".format(sortFouls[0][0]))
+    print("The team with the highest card average is {}".format(sortCards[19][0]))
+    print("The team with the lowest card average is {}".format(sortCards[0][0]))
+          
+    
 
 if __name__ == "__main__":
     file_contents = read_csv(csv_file)
     print(process_results(file_contents))
- 

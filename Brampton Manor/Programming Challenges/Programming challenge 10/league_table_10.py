@@ -138,7 +138,7 @@ if __name__ == "__main__":
     print("The dirtest team is {}".format(sortFouls[19][0]))
     print("The cleanest team is {}".format(sortFouls[0][0]))
     print("The team with the highest card average is {}".format(sortCards[19][0]))
-    print("The team with the lowest card average is {}".format(sortCards[0][0]))
+    print("The team with the lowest card average is {}".format(sortCards[0][0], sortReferee[1][0]))
           
     
 

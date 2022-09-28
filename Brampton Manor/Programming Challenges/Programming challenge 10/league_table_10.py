@@ -19,14 +19,17 @@ def read_csv(csv_file):
 def process_results(rows):
     dictionary = {}
     stats = {}
+    referee = {}
     for row in rows:
-        home,away,homegoals,awaygoals,winner = row[1],row[2],row[3],row[4],row[5]
+        home,away,homegoals,awaygoals,winner,r = row[1],row[2],row[3],row[4],row[5],row[6]
+        if r not in referee:
+            referee[r] = [0,0,0]
         if home not in dictionary or home not in stats:
             dictionary[home] = [0,0,0,0,0] ##win, draw, lost, goal difference, points
-            stats[home] = [0,0,0,0,0,0]
+            stats[home] = [0,0,0,0]
         if away not in dictionary or away not in stats:
             dictionary[away] = [0,0,0,0,0]
-            stats[away] = [0,0,0,0,0,0]
+            stats[away] = [0,0,0,0]
 
         ## check if it is draw
         if winner == "D":
@@ -65,24 +68,58 @@ def process_results(rows):
         stats[home][2] += int(row[11])
         stats[away][2] += int(row[12])
 
-        ## Card Average
-        homeYellow, awayYellow, homeRed, awayRed = row[15], row[16], row[17], row[18]
-        homeCards = int(homeYellow) + (int(homeRed) * 2)
-        awayCards = int(awayYellow) + (int(awayRed) * 2)
-        stats[home][3] += homeCards
-        stats[away][3] += awayCards
 
-    
+        ## Referee
+        card = int(row[15]) + int(row[16]) + (3 *int(row[17])) + (3 * int(row[18]))
+        referee[r][0] += card
+        referee[r][1] += 1
+
+
 
 
     sort = {k:v for k, v in sorted(dictionary.items(), key=lambda e: e[1][4], reverse=True)}
     keysList = list(sort.keys())
+    kList2 = list(referee.keys())
     print("Club {:<14} Won {:<11} Drawn {:<9} Lost {:<10} GD {:<12} Points".format(" ", " "," "," "," "))
     print("\n")
-    for x in range(0,20):
+    for x in range(0,19):
         key = keysList[x]
+        key2 = kList2[x]
         team = "{:<20}".format(key)
 
+
+        accuracy = stats[key][1] / stats[key][0]
+        stats[key][3] = accuracy
+    
+        for y in range (0,5):
+            team += "{:<16}".format(sort[key][y])
+        print(team)
+
+
+        averageRef = referee[key2][0] / referee[key2][1]
+        referee[key2][2] = averageRef
+
+    
+    sortFouls = sorted(stats.items(), key=lambda e: e[1][2])
+    sortAccuracy = sorted(stats.items(), key=lambda e: e[1][3])
+    sortReferee = sorted(referee.items(), key=lambda e: e[1][2])
+
+
+
+
+    print("\n")
+    print("The most acccurate team is {}".format(sortAccuracy[19][0]))
+    print("The least accurate team is {}".format(sortAccuracy[0][0]))
+    print("The dirtest team is {}".format(sortFouls[19][0]))
+    print("The cleanest team is {}".format(sortFouls[0][0]))
+    print("The referee with the highest card average is {}".format(sortReferee[18][0]))
+    print("The referee with the lowest card average is {}".format(sortReferee[0][0]))
+          
+    
+
+if __name__ == "__main__":
+    file_contents = read_csv(csv_file)
+    print(process_results(file_contents))
         key = keysList[x]
         accuracy = stats[key][1] / stats[key][0]
         stats[key][4] = accuracy

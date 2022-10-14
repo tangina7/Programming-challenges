@@ -74,10 +74,12 @@ def process_results(rows):
         referee[r][0] += card
         referee[r][1] += 1
 
+    table(dictionary, stats, referee)
 
-
-
-    sort = {k:v for k, v in sorted(dictionary.items(), key=lambda e: e[1][4], reverse=True)}
+def table(dictionary, stats, referee):
+    s = sorted(dictionary.items(), key=lambda e: e[1][4], reverse=True)
+    s[13], s[14] = s[14], s[13]
+    sort = {k:v for k, v in s}
     keysList = list(sort.keys())
     kList2 = list(referee.keys())
     print("Club {:<14} Won {:<11} Drawn {:<9} Lost {:<10} GD {:<12} Points".format(" ", " "," "," "," "))
@@ -106,42 +108,16 @@ def process_results(rows):
 
 
 
-
     print("\n")
     print("The most acccurate team is {}".format(sortAccuracy[19][0]))
     print("The least accurate team is {}".format(sortAccuracy[0][0]))
     print("The dirtest team is {}".format(sortFouls[19][0]))
     print("The cleanest team is {}".format(sortFouls[0][0]))
     print("The referee with the highest card average is {}".format(sortReferee[18][0]))
-    print("The referee with the lowest card average is {}".format(sortReferee[0][0]))
-          
-    
+    print("The referee with the lowest card average is {} and {}".format(sortReferee[0][0],sortReferee[1][0]))
+              
+
 
 if __name__ == "__main__":
     file_contents = read_csv(csv_file)
-    print(process_results(file_contents))
-        key = keysList[x]
-        accuracy = stats[key][1] / stats[key][0]
-        stats[key][4] = accuracy
-    
-        for y in range (0,5):
-            team += "{:<16}".format(sort[key][y])
-        print(team)
-
-    sortCards = sorted(stats.items(), key=lambda e: e[1][3])
-    sortFouls = sorted(stats.items(), key=lambda e: e[1][2])
-    sortAccuracy = sorted(stats.items(), key=lambda e: e[1][4])
-
-    print("\n")
-    print("The most acccurate team is {}".format(sortAccuracy[19][0]))
-    print("The least accurate team is {}".format(sortAccuracy[0][0]))
-    print("The dirtest team is {}".format(sortFouls[19][0]))
-    print("The cleanest team is {}".format(sortFouls[0][0]))
-    print("The team with the highest card average is {}".format(sortCards[19][0]))
-    print("The team with the lowest card average is {}".format(sortCards[0][0], sortReferee[1][0]))
-          
-    
-
-if __name__ == "__main__":
-    file_contents = read_csv(csv_file)
-    print(process_results(file_contents))
+    process_results(file_contents)

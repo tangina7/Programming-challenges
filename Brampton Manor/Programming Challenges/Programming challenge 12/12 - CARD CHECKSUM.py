@@ -40,22 +40,31 @@ def issue(num):
 def luhn(num):
     sum = 0
     length = len(num)
-    parity = length % 2
-    for i in range (0,length):
-       n = (str(num))[i]
-       n = int(n)
-       if i % 2 == parity:
-          sum = sum + n
-       elif n > 4:
-          sum = sum + (2*n) - 9
-       else:
-          sum = sum + (2*n)
-    if sum % 10 == 0:
-        return sum
+    if length%2 == 0:
+        for i in range (length):
+            if (i+1)%2 == 0:
+                sum += int(num[i])
+            else:
+                sum += luhn2(int(num[i]))
+    else:
+        for i in range(length):
+            if (i+1)%2 == 0:
+                sum += luhn2(int(num[i]))
+            else:
+               sum += int(num[i]) 
+    return sum%10
+
+def luhn2(num):
+    num = 2*int(num)
+    if num>9:
+        return num-9
+    else:
+        return num
 
 if __name__ == "__main__":
     number = valid()
     p = pan(number)
     c = checksum(number)
     issue(number)
-    l = luhn(number)
+    if luhn(number) == 0:
+        print("Card is valid")

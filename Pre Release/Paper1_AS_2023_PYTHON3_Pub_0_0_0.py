@@ -233,6 +233,8 @@ def DisplayCode(SourceCode, Memory):
 
 
 def Assemble(SourceCode, Memory):
+    """Decription: If there are variables stored in memory at the beginning of the code, it jumps to the first instruction.
+       Return: Object"""
     Memory = ResetMemory(Memory)
     NumberOfLines = int(SourceCode[0])
     SymbolTable = {}
@@ -248,6 +250,8 @@ def Assemble(SourceCode, Memory):
 
 
 def ConvertToBinary(DecimalNumber):
+    """Decription: Converts a decimal number into binary using binary division. If the number of bits is less than 3 than it appends 0 at MSB.
+       Return: String"""
     BinaryString = EMPTY_STRING
     while DecimalNumber > 0:
         Remainder = DecimalNumber % 2
@@ -260,6 +264,8 @@ def ConvertToBinary(DecimalNumber):
 
 
 def ConvertToDecimal(BinaryString):
+    """Decription: Converts a decimal number into binary.
+       Return: Integer"""
     DecimalNumber = 0
     for Bit in BinaryString:
         BitValue = int(Bit)
@@ -268,6 +274,7 @@ def ConvertToDecimal(BinaryString):
 
 
 def DisplayFrameDelimiter(FrameNumber):
+    """Decription: Divider that can display the frame number."""
     if FrameNumber == -1:
         print("***************************************************************")
     else:
@@ -275,6 +282,7 @@ def DisplayFrameDelimiter(FrameNumber):
 
 
 def DisplayCurrentState(SourceCode, Memory, Registers):
+    """Decription: Displays the status of registers."""
     print("*")
     DisplayCode(SourceCode, Memory)
     print("*")
@@ -285,6 +293,8 @@ def DisplayCurrentState(SourceCode, Memory, Registers):
 
 
 def SetFlags(Value, Registers):
+    """Decription: Sets the flags for the status register. The flags are for zero, negative and overflow
+       Return: Array"""
     if Value == 0:
         Registers[STATUS] = ConvertToDecimal("100")
     elif Value < 0:
@@ -297,6 +307,8 @@ def SetFlags(Value, Registers):
 
 
 def ReportRunTimeError(ErrorMessage, Registers):
+    """Decription: Outputs there has a been a runtime error and stores this in the array
+       Return: Array"""
     print("Run time error:", ErrorMessage)
     Registers[ERR] = 1
     return Registers

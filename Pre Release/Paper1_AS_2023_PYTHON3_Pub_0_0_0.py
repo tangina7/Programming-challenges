@@ -315,12 +315,16 @@ def ReportRunTimeError(ErrorMessage, Registers):
 
 
 def ExecuteLDA(Memory, Registers, Address):
+    """Decription: The value stored in the memory loaction is copied into the accumulator. 
+       Return: Array"""
     Registers[ACC] = Memory[Address].OperandValue
     Registers = SetFlags(Registers[ACC], Registers)
     return Registers
 
 
 def ExecuteSTA(Memory, Registers, Address):
+    """Decription: Stores the value in the accumulator into the specified memory loaction. 
+       Return: Object"""
     Memory[Address].OperandValue = Registers[ACC]
     return Memory
 
@@ -412,26 +416,37 @@ def Execute(SourceCode, Memory):
         Registers[PC] = Registers[PC] + 1
         if OpCode == "LDA":
             Registers = ExecuteLDA(Memory, Registers, Operand)
+            DisplayStack(Memory, Registers)
         elif OpCode == "STA":
             Memory = ExecuteSTA(Memory, Registers, Operand)
+            DisplayStack(Memory, Registers)
         elif OpCode == "LDA#":
             Registers = ExecuteLDAimm(Registers, Operand)
+            DisplayStack(Memory, Registers)
         elif OpCode == "ADD":
             Registers = ExecuteADD(Memory, Registers, Operand)
+            DisplayStack(Memory, Registers)
         elif OpCode == "JMP":
             Registers = ExecuteJMP(Registers, Operand)
+            DisplayStack(Memory, Registers)
         elif OpCode == "JSR":
             Memory, Registers = ExecuteJSR(Memory, Registers, Operand)
+            DisplayStack(Memory, Registers)
         elif OpCode == "CMP#":
             Registers = ExecuteCMPimm(Registers, Operand)
+            DisplayStack(Memory, Registers)
         elif OpCode == "BEQ":
             Registers = ExecuteBEQ(Registers, Operand)
+            DisplayStack(Memory, Registers)
         elif OpCode == "SUB":
             Registers = ExecuteSUB(Memory, Registers, Operand)
+            DisplayStack(Memory, Registers)
         elif OpCode == "SKP":
             ExecuteSKP()
+            DisplayStack(Memory, Registers)
         elif OpCode == "RTN":
             Registers = ExecuteRTN(Memory, Registers)
+            DisplayStack(Memory, Registers)
         if Registers[ERR] == 0:
             OpCode = Memory[Registers[PC]].OpCode
             DisplayCurrentState(SourceCode, Memory, Registers)
